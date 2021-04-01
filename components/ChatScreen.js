@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/router"
 import firebase from 'firebase'
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -17,6 +17,7 @@ import TimeAgo from "timeago-react"
 const ChatScreen = ({ chat, messages }) => {
     const [user] = useAuthState(auth)
     const [input, setInput] = useState("")
+    const endOfMessageRef = useRef(null)
     const router = useRouter()
     const [messagesSnapshot] = useCollection(
         db
@@ -29,6 +30,13 @@ const ChatScreen = ({ chat, messages }) => {
     const [recipientSnapshot] = useCollection(
         db.collection('users').where('email', '==', getRecipientEmail(chat.users, user))
     )
+
+    const scrollToBottom = () => {
+        endOfMessageRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        })
+    }
 
     const showMessages = () => {
         if (messagesSnapshot) {
@@ -70,6 +78,7 @@ const ChatScreen = ({ chat, messages }) => {
         })
 
         setInput("")
+        scrollToBottom()
     }
 
     const recipient = recipientSnapshot?.docs?.[0]?.data()
@@ -101,7 +110,7 @@ const ChatScreen = ({ chat, messages }) => {
 
             <MessageContainer>
                 {showMessages()}
-                <EndOfMessage />
+                <EndOfMessage ref={endOfMessageRef} />
             </MessageContainer>
 
             <InputContainer>
@@ -157,7 +166,7 @@ const MessageContainer = styled.div`
 `
 
 const EndOfMessage = styled.div`
-
+    margin-bottom: 50px;
 `
 
 const InputContainer = styled.form`
