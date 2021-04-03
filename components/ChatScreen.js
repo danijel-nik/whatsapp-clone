@@ -74,7 +74,8 @@ const ChatScreen = ({ chat, messages }) => {
         db.collection("chats").doc(router.query.id).collection("messages").add({
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             message: input,
-            photoURL: user.photoURL
+            photoURL: user.photoURL,
+            user: user.email
         })
 
         setInput("")
@@ -87,7 +88,7 @@ const ChatScreen = ({ chat, messages }) => {
     return (
         <Container>
             <Header>
-                <Avatar />
+                <Avatar src={recipient?.photoURL} />
                 <HeaderInformation>
                     <h3>{recipientEmail}</h3>
                     {recipientSnapshot ? (

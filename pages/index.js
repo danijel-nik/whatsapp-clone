@@ -1,14 +1,10 @@
-import Head from 'next/head'
+import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
 
 export default function Home() {
   return (
     <div>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <Header title="Whatsapp 2.0 - Clone" />
       <Sidebar />
     </div>
   )

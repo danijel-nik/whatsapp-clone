@@ -1,4 +1,4 @@
-import Head from "next/head"
+import Header from "../../components/Header"
 import Sidebar from "../../components/Sidebar"
 import ChatScreen from "../../components/ChatScreen"
 import { db, auth } from "../../firebase"
@@ -11,9 +11,7 @@ const Chat = ({ chat, messages }) => {
     
     return (
         <Container>
-            <Head>
-                <title>Chat with {getRecipientEmail(chat.users, user)}</title>
-            </Head>
+            <Header title={`Chat with ${getRecipientEmail(chat.users, user)}`} />
             <Sidebar />
             <ChatContainer>
                 <ChatScreen chat={chat} messages={messages} />
