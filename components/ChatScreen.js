@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import firebase from 'firebase'
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth, db } from "../firebase"
-import { Avatar, IconButton } from "@material-ui/core"
+import { Avatar, IconButton, Menu, MenuItem } from "@material-ui/core"
 import MoreVertIcon from "@material-ui/icons/MoreVert"
 import AttachFileIcon from "@material-ui/icons/AttachFile"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
@@ -30,6 +30,12 @@ const ChatScreen = ({ chat, messages }) => {
     const [recipientSnapshot] = useCollection(
         db.collection('users').where('email', '==', getRecipientEmail(chat.users, user))
     )
+
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+
+    const closeMenu = () => {
+        setMenuAnchorEl(null)
+    } 
 
     const scrollToBottom = () => {
         endOfMessageRef.current.scrollIntoView({
@@ -103,9 +109,16 @@ const ChatScreen = ({ chat, messages }) => {
                     <IconButton>
                         <AttachFileIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
                         <MoreVertIcon />
                     </IconButton>
+                    <Menu 
+                        anchorEl={menuAnchorEl}
+                        keepMounted
+                        open={Boolean(menuAnchorEl)}
+                        onClose={closeMenu}>
+                        <MenuItem onClick={() => router.push('/')}>Close Chat</MenuItem>
+                    </Menu>
                 </HeaderIcons>
             </Header>
 
