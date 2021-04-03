@@ -1,4 +1,5 @@
-import { Avatar, IconButton, Button, Tooltip } from '@material-ui/core'
+import { useState } from 'react'
+import { Avatar, IconButton, Button, Tooltip, Menu, MenuItem } from '@material-ui/core'
 import ChatIcon from '@material-ui/icons/Chat'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
@@ -13,6 +14,12 @@ const Sidebar = () => {
     const [user] = useAuthState(auth)
     const userChatRef = db.collection('chats').where('users', 'array-contains', user.email)
     const [chatsSnapshot] = useCollection(userChatRef)
+
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null)
+
+    const closeMenu = () => {
+        setMenuAnchorEl(null)
+    } 
 
     const createChat = () => {
         const input = prompt(
@@ -44,19 +51,27 @@ const Sidebar = () => {
     return (
         <Container>
             <Header>
-                <Tooltip title={`${user.email} | Sign Out`}>
-                    <UserAvatar src={user.photoURL} onClick={() => auth.signOut()} />
+                <Tooltip title={user.email}>
+                    <UserAvatar src={user.photoURL} />
                 </Tooltip>
 
                 <IconsContainer>
                     <IconButton>
                         <ChatIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
                         <MoreVertIcon />
                     </IconButton>
                 </IconsContainer>
             </Header>
+
+            <Menu 
+                anchorEl={menuAnchorEl}
+                keepMounted
+                open={Boolean(menuAnchorEl)}
+                onClose={closeMenu}>
+                <MenuItem onClick={() => auth.signOut()}>Sign Out</MenuItem>
+            </Menu>
 
             <Search>
                 <SearchIcon />

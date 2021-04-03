@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/router"
 import firebase from 'firebase'
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -31,7 +31,7 @@ const ChatScreen = ({ chat, messages }) => {
         db.collection('users').where('email', '==', getRecipientEmail(chat.users, user))
     )
 
-    const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null)
 
     const closeMenu = () => {
         setMenuAnchorEl(null)
@@ -87,6 +87,12 @@ const ChatScreen = ({ chat, messages }) => {
         setInput("")
         scrollToBottom()
     }
+
+    useEffect(scrollToBottom, [])
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [chat])
 
     const recipient = recipientSnapshot?.docs?.[0]?.data()
     const recipientEmail = getRecipientEmail(chat.users, user)
